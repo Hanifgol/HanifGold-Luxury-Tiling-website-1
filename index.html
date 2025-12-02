@@ -40,7 +40,11 @@
         }
       }
     </script>
-<script type="importmap">
+    <script>
+      // Polyfill for process to prevent crashes if code accesses process.env directly
+      window.process = { env: {} };
+    </script>
+  <script type="importmap">
 {
   "imports": {
     "react": "https://aistudiocdn.com/react@^19.2.0",
