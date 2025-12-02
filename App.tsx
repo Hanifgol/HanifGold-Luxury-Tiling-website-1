@@ -26,23 +26,39 @@ const ProtectedRoute = ({ children }: PropsWithChildren) => {
 };
 
 const Login = () => {
-  const { login, isAuthenticated } = useContent();
+  const { login, signup, isAuthenticated } = useContent();
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
 
   if (isAuthenticated) return <Navigate to="/admin" replace />;
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setErrorMessage('');
+    setSuccessMessage('');
     
-    const result = await login(email, pass);
-    
-    if (!result.success) {
-      setErrorMessage(result.error || 'Invalid credentials.');
+    // Trim whitespace to avoid errors
+    const cleanEmail = email.trim();
+    const cleanPass = pass.trim();
+
+    if (isSignUp) {
+        const result = await signup(cleanEmail, cleanPass);
+        if (!result.success) {
+            setErrorMessage(result.error || 'Signup failed.');
+        } else {
+            setSuccessMessage('Account created! You may need to verify your email, or simply log in if verification is disabled.');
+            setIsSignUp(false); // Switch back to login
+        }
+    } else {
+        const result = await login(cleanEmail, cleanPass);
+        if (!result.success) {
+            setErrorMessage(result.error || 'Invalid credentials.');
+        }
     }
     setLoading(false);
   };
@@ -54,7 +70,7 @@ const Login = () => {
            <h1 className="text-2xl font-serif font-bold text-gold-600">HanifGold CMS</h1>
            <p className="text-gray-500 text-sm">Authorized Personnel Only</p>
         </div>
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-1">Email</label>
             <input 
@@ -82,12 +98,30 @@ const Login = () => {
                 <p className="text-red-700 text-sm">{errorMessage}</p>
             </div>
           )}
+          {successMessage && (
+            <div className="bg-green-50 border-l-4 border-green-500 p-3">
+                <p className="text-green-700 text-sm">{successMessage}</p>
+            </div>
+          )}
           <button type="submit" disabled={loading} className="w-full bg-gold-600 text-white font-bold py-3 rounded hover:bg-gold-700 transition-colors disabled:opacity-50">
-            {loading ? 'Authenticating...' : 'Login'}
+            {loading ? (isSignUp ? 'Creating Account...' : 'Authenticating...') : (isSignUp ? 'Create Admin Account' : 'Login')}
           </button>
         </form>
-        <div className="mt-6 text-center">
-            <a href="/" className="text-sm text-gray-500 hover:text-gray-800">Return to Website</a>
+        
+        <div className="mt-6 text-center space-y-4">
+            <button 
+                onClick={() => {
+                    setIsSignUp(!isSignUp);
+                    setErrorMessage('');
+                    setSuccessMessage('');
+                }} 
+                className="text-sm text-gold-600 hover:text-gold-800 font-semibold"
+            >
+                {isSignUp ? 'Already have an account? Login' : 'First time here? Create Admin Account'}
+            </button>
+            <div className="block">
+                <a href="/" className="text-sm text-gray-400 hover:text-gray-600">Return to Website</a>
+            </div>
         </div>
       </div>
     </div>

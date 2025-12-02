@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useState, useEffect, PropsWithChildren } from 'react';
 import { DataContextType, Project, Service, Testimonial, SiteConfig, BlogPost, JournalEntry } from '../types';
 import { INITIAL_CONFIG, INITIAL_PROJECTS, INITIAL_SERVICES, INITIAL_TESTIMONIALS, INITIAL_BLOG_POSTS } from '../constants';
@@ -231,6 +232,18 @@ export const ContentProvider = ({ children }: PropsWithChildren) => {
     return { success: true };
   };
 
+  const signup = async (email: string, password: string): Promise<{ success: boolean; error?: string }> => {
+    const { error } = await supabase.auth.signUp({
+        email,
+        password,
+    });
+    if (error) {
+        console.error("Signup Error:", error.message);
+        return { success: false, error: error.message };
+    }
+    return { success: true };
+  };
+
   const logout = async () => {
     await supabase.auth.signOut();
     setIsAuthenticated(false);
@@ -246,7 +259,7 @@ export const ContentProvider = ({ children }: PropsWithChildren) => {
       addTestimonial, deleteTestimonial,
       addBlogPost, updateBlogPost, deleteBlogPost,
       addJournalEntry, updateJournalEntry, deleteJournalEntry,
-      isAuthenticated, isAuthLoading, login, logout
+      isAuthenticated, isAuthLoading, login, signup, logout
     }}>
       {children}
     </ContentContext.Provider>

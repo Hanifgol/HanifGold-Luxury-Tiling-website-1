@@ -3,6 +3,63 @@ import React, { useState } from 'react';
 import { useContent } from '../context/ContentContext';
 import { Icons } from '../components/Icons';
 import { Link } from 'react-router-dom';
+import { Project } from '../types';
+
+// --- Helper Components ---
+const ProjectCard = ({ project }: { project: Project }) => {
+    const [showBefore, setShowBefore] = useState(false);
+    // If afterImageUrl is present, use it as the "After" state, otherwise use imageUrl.
+    const afterImage = project.afterImageUrl || project.imageUrl;
+    // Use beforeImageUrl if present.
+    const hasBefore = !!project.beforeImageUrl;
+
+    return (
+        <div 
+            className="group relative bg-neutral-900 overflow-hidden cursor-pointer h-[450px] rounded-sm"
+            onMouseEnter={() => hasBefore && setShowBefore(true)}
+            onMouseLeave={() => hasBefore && setShowBefore(false)}
+        >
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80 z-10 pointer-events-none"></div>
+            
+            {/* Image Container */}
+            <div className="relative w-full h-full">
+                <img 
+                    src={showBefore && project.beforeImageUrl ? project.beforeImageUrl : afterImage} 
+                    alt={project.title} 
+                    className={`w-full h-full object-cover transition-transform duration-1000 ${!showBefore ? 'group-hover:scale-110' : ''}`}
+                />
+                
+                {hasBefore && (
+                    <div className="absolute top-4 right-4 z-20 bg-black/60 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/10 shadow-lg">
+                        <span className="text-[10px] uppercase font-bold tracking-widest text-white flex items-center gap-1.5">
+                            {showBefore ? (
+                                <><Icons.RotateCcw size={10} className="text-gold-500"/> Before</>
+                            ) : (
+                                <><Icons.CheckCircle size={10} className="text-green-500"/> After</>
+                            )}
+                        </span>
+                    </div>
+                )}
+            </div>
+
+            <div className="absolute inset-0 z-20 flex flex-col justify-end p-8 translate-y-4 group-hover:translate-y-0 transition-transform duration-500 pointer-events-none">
+                <span className="text-gold-500 text-[10px] uppercase tracking-[0.2em] font-bold mb-2 flex items-center gap-2">
+                    <span className="w-8 h-px bg-gold-500"></span> {project.category}
+                </span>
+                <h3 className="text-2xl font-serif text-white mb-3 group-hover:text-gold-400 transition-colors">{project.title}</h3>
+                <p className="text-gray-300 text-sm leading-6 line-clamp-3 opacity-0 group-hover:opacity-100 transition-all duration-500 delay-100 font-light mb-4">
+                    {project.description}
+                </p>
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
+                    <span className="text-xs text-white uppercase tracking-widest border-b border-white/30 pb-1">View Details</span>
+                </div>
+            </div>
+            <div className="absolute top-6 left-6 z-20 bg-black/50 backdrop-blur-md px-3 py-1 text-xs text-white uppercase tracking-wider rounded-sm border border-white/5">
+                {project.location}
+            </div>
+        </div>
+    );
+};
 
 // --- Home Page ---
 export const Home = () => {
@@ -219,29 +276,7 @@ export const Portfolio = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredProjects.map((project) => (
-          <div key={project.id} className="group relative bg-neutral-900 overflow-hidden cursor-pointer h-[450px] rounded-sm">
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80 z-10"></div>
-            <img 
-              src={project.imageUrl} 
-              alt={project.title} 
-              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-            />
-            <div className="absolute inset-0 z-20 flex flex-col justify-end p-8 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-              <span className="text-gold-500 text-[10px] uppercase tracking-[0.2em] font-bold mb-2 flex items-center gap-2">
-                 <span className="w-8 h-px bg-gold-500"></span> {project.category}
-              </span>
-              <h3 className="text-2xl font-serif text-white mb-3 group-hover:text-gold-400 transition-colors">{project.title}</h3>
-              <p className="text-gray-300 text-sm leading-6 line-clamp-3 opacity-0 group-hover:opacity-100 transition-all duration-500 delay-100 font-light mb-4">
-                {project.description}
-              </p>
-              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
-                <span className="text-xs text-white uppercase tracking-widest border-b border-white/30 pb-1">View Details</span>
-              </div>
-            </div>
-            <div className="absolute top-6 right-6 z-20 bg-black/50 backdrop-blur-md px-3 py-1 text-xs text-white uppercase tracking-wider rounded-sm">
-               {project.location}
-            </div>
-          </div>
+            <ProjectCard key={project.id} project={project} />
         ))}
       </div>
     </div>

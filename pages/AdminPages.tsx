@@ -223,6 +223,8 @@ export const AdminProjects = () => {
       id: Date.now().toString(),
       title: '', category: 'Residential', location: '', description: '', 
       imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800', 
+      beforeImageUrl: '',
+      afterImageUrl: '',
       date: new Date().toISOString().split('T')[0]
     });
   };
@@ -275,8 +277,19 @@ export const AdminProjects = () => {
              </button>
           </div>
           <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">Image URL</label>
+              <label className="block text-sm font-bold text-gray-700 mb-2">Main Image URL (Thumbnail)</label>
               <input className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent outline-none transition-all text-sm font-mono text-gray-500" placeholder="https://..." value={form.imageUrl} onChange={e => setForm({...form, imageUrl: e.target.value})} />
+          </div>
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">Before Image URL (Optional)</label>
+                <input className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent outline-none transition-all text-sm font-mono text-gray-500" placeholder="https://..." value={form.beforeImageUrl || ''} onChange={e => setForm({...form, beforeImageUrl: e.target.value})} />
+            </div>
+            <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">After Image URL (Optional)</label>
+                <input className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent outline-none transition-all text-sm font-mono text-gray-500" placeholder="https://..." value={form.afterImageUrl || ''} onChange={e => setForm({...form, afterImageUrl: e.target.value})} />
+                <p className="text-xs text-gray-400 mt-1">If set, this will be used for comparison views instead of the main image.</p>
+            </div>
           </div>
           <div className="flex justify-end gap-3 pt-6 border-t mt-6">
             <button onClick={() => setEditingId(null)} className="px-6 py-2.5 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors">Cancel</button>
