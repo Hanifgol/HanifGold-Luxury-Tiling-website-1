@@ -126,7 +126,7 @@ export const ContentProvider = ({ children }: PropsWithChildren) => {
 
   const addProject = async (project: Project) => {
     setProjects(prev => [project, ...prev]);
-    const { id, ...data } = project; 
+    // The ID is generated on the frontend (Date.now()) so we send the whole object
     await supabase.from('projects').insert(mapKeysToSnake(project));
   };
 
