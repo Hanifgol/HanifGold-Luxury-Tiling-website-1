@@ -1,5 +1,4 @@
-
-import React, { useState, PropsWithChildren } from 'react';
+import { useState, PropsWithChildren, FormEvent } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Icons } from './Icons';
 import { useContent } from '../context/ContentContext';

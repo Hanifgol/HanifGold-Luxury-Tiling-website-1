@@ -1,5 +1,4 @@
-
-import React, { PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Icons } from './Icons';
 import { useContent } from '../context/ContentContext';

@@ -1,5 +1,4 @@
-
-import React, { createContext, useContext, useState, useEffect, PropsWithChildren } from 'react';
+import { createContext, useContext, useState, useEffect, PropsWithChildren } from 'react';
 import { DataContextType, Project, Service, Testimonial, SiteConfig, BlogPost, JournalEntry } from '../types';
 import { INITIAL_CONFIG, INITIAL_PROJECTS, INITIAL_SERVICES, INITIAL_TESTIMONIALS, INITIAL_BLOG_POSTS } from '../constants';
 import { supabase } from '../lib/supabaseClient';

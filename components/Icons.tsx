@@ -1,5 +1,3 @@
-
-import React from 'react';
 import { 
   Menu, X, Phone, Mail, MapPin, Instagram, Facebook, 
   MessageCircle, Star, ArrowRight, CheckCircle, 
