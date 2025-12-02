@@ -1,5 +1,12 @@
 import { GoogleGenAI } from "@google/genai";
 
+// Ensure process is defined to avoid TS errors and follow guidelines for API Key access
+declare var process: {
+  env: {
+    API_KEY: string;
+  };
+};
+
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 export const generateMarketingCopy = async (topic: string, type: 'service' | 'project' | 'about' | 'blog', extraContext?: string): Promise<string> => {
